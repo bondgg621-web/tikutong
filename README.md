@@ -1,23 +1,37 @@
-# Question Bank Curator
+# 题库通 TikuTong
 
-Question Bank Curator (QBC) is an agent-native local question-bank compiler for existing questions. It helps a coding Agent extract question content from authorized local material, preserve where each question came from, validate a stable canonical representation, and export a standard CSV.
+**Agent-native Question Bank Compiler**
 
-## What QBC is
+Turn existing questions from local documents into structured, portable question banks.
 
-QBC organizes questions that already exist. It provides two routes:
+把散落在本地 PDF、Word、图片和文本中的已有题目，整理成结构化、可迁移的标准题库。
+
+- Extract existing questions from local materials without inventing missing content.
+- Normalize them into canonical QuestionBank JSON.
+- Export the Standard Question Bank CSV.
+- Preserve source provenance for every question.
+- Use Agent-assisted extraction for single-choice, multiple-choice, and true/false material.
+
+[Go to Quick Start](#quick-start)
+
+## What TikuTong is
+
+题库通 TikuTong (QBC) is an agent-native local question-bank compiler for existing questions. It helps a coding Agent extract question content from authorized local material, preserve where each question came from, validate a stable canonical representation, and export a standard CSV.
+
+TikuTong organizes questions that already exist. It provides two routes:
 
 - A deterministic route for one strict single-choice UTF-8 text or Markdown file.
 - An assisted route for content that the user's Agent environment can read, including PDF, DOCX, image, irregular text, and mixed supported question types.
 
 The assisted route begins after the Agent has read the source. QBC then validates the content-only handoff, creates local identities, builds QuestionBank v1.0, and reuses the existing CSV exporter.
 
-## What QBC is not
+## What TikuTong is not
 
-QBC is not an AI quiz generator. It does not invent questions, fill missing answers, judge medical correctness, or silently repair uncertain extraction. QBC has no bundled PDF or DOCX parser, no bundled OCR, and no bundled LLM client.
+TikuTong is not an AI quiz generator. It does not invent questions, fill missing answers, judge medical correctness, or silently repair uncertain extraction. The QBC core has no bundled PDF or DOCX parser, no bundled OCR, and no bundled LLM client.
 
 ## Installation
 
-QBC v1.0 is used directly from the repository's Skill package. It requires Python 3.12 or newer, and core processing has no third-party runtime dependencies. This repository does not publish an installable `qbc` package or automatically add its helper modules to Python's import path. Run Agent and Python helper commands from the Skill's scripts directory (or add that directory to the Python module search path):
+TikuTong is used directly from the repository's Skill package. It requires Python 3.12 or newer, and core processing has no third-party runtime dependencies. This repository does not publish an installable `qbc` package or automatically add its helper modules to Python's import path. Run Agent and Python helper commands from the Skill's scripts directory (or add that directory to the Python module search path):
 
 ```text
 cd skills/curate-question-bank/scripts
@@ -34,7 +48,7 @@ python -m qbproduction --input <questions.md> --output <question-bank.csv>
 For PDF, DOCX, image, irregular text, multiple-choice, or true/false material, ask your Agent:
 
 ```text
-Use QBC to read D:\资料\神经病学题库.pdf, extract the existing questions without filling missing answers, and save a canonical QuestionBank JSON plus the Standard Question Bank CSV.
+Use TikuTong to read D:\资料\神经病学题库.pdf, extract the existing questions without filling missing answers, and save a canonical QuestionBank JSON plus the Standard Question Bank CSV.
 ```
 
 The Agent should read [`skills/curate-question-bank/SKILL.md`](skills/curate-question-bank/SKILL.md), choose the assisted route, and use the maintained API recipe in [`assisted-intake-v1.md`](skills/curate-question-bank/references/assisted-intake-v1.md). The user does not need to manually construct QBC's internal objects.

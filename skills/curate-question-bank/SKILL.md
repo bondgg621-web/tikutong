@@ -1,9 +1,11 @@
 ---
 name: curate-question-bank
-description: Compile existing local questions through either strict deterministic single-choice parsing or Agent-assisted content extraction into canonical JSON and Standard Question Bank CSV. QBC owns validation and identity; it bundles no document reader, OCR, LLM client, answer generation, or dependency installer.
+description: Use 题库通 TikuTong, an Agent-native Question Bank Compiler, to compile existing local questions through strict deterministic single-choice parsing or Agent-assisted content extraction into canonical JSON and Standard Question Bank CSV. The QBC core owns validation and identity; it bundles no document reader, OCR, LLM client, answer generation, or dependency installer.
 ---
 
-# Curate Question Bank
+# 题库通 TikuTong
+
+Agent-native Question Bank Compiler
 
 Operate only on roots explicitly supplied by the caller:
 

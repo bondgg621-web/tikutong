@@ -31,9 +31,9 @@ def test_readme_has_release_sections_and_plain_language_positioning() -> None:
     text = README_PATH.read_text(encoding="utf-8")
 
     for heading in (
-        "# Question Bank Curator",
-        "## What QBC is",
-        "## What QBC is not",
+        "# 题库通 TikuTong",
+        "## What TikuTong is",
+        "## What TikuTong is not",
         "## Installation",
         "## Quick Start",
         "## Supported inputs",
@@ -44,6 +44,9 @@ def test_readme_has_release_sections_and_plain_language_positioning() -> None:
         "## Current limitations",
     ):
         assert heading in text
+    assert "Agent-native Question Bank Compiler" in text
+    assert "Turn existing questions from local documents into structured, portable question banks." in text
+    assert "把散落在本地 PDF、Word、图片和文本中的已有题目，整理成结构化、可迁移的标准题库。" in text
     assert "agent-native local question-bank compiler for existing questions" in text
     assert "AI quiz generator" in text
     assert "QuestionBank v1.0" in text
@@ -68,6 +71,8 @@ def test_readme_install_and_commands_match_the_real_public_api_boundary() -> Non
 def test_skill_routes_deterministic_and_assisted_work_without_internal_history() -> None:
     text = SKILL_PATH.read_text(encoding="utf-8")
 
+    assert "# 题库通 TikuTong" in text
+    assert "Agent-native Question Bank Compiler" in text
     assert "## Choose a route" in text
     assert "### Route A — Deterministic" in text
     assert "### Route B — Assisted" in text
