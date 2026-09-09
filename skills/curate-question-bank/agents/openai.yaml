@@ -1,0 +1,4 @@
+interface:
+  display_name: "Question Bank Curator"
+  short_description: "Inventory sources and parse one strict single-choice file"
+  default_prompt: "Use $curate-question-bank to inventory local sources or parse one explicitly selected strict single-choice source into first-materialization candidates."

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "10000000-0000-4000-8000-000000000001",
+  "sources": [
+    {"source_id": "11000000-0000-4000-8000-000000000001", "kind": "question_document", "current_relative_path": "course/chapter-1-questions.md", "path_history": ["course/chapter-1-questions.md"], "current_content_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "revision": 1},
+    {"source_id": "11000000-0000-4000-8000-000000000002", "kind": "answer_document", "current_relative_path": "course/chapter-1-answer.txt", "path_history": ["course/chapter-1-answer.txt"], "current_content_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "revision": 1},
+    {"source_id": "11000000-0000-4000-8000-000000000003", "kind": "question_document", "current_relative_path": "course/chapter-2-questions.md", "path_history": ["course/chapter-2-questions.md"], "current_content_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "revision": 1},
+    {"source_id": "11000000-0000-4000-8000-000000000004", "kind": "unrelated", "current_relative_path": "course/unrelated.txt", "path_history": ["course/unrelated.txt"], "current_content_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "revision": 1},
+    {"source_id": "11000000-0000-4000-8000-000000000005", "kind": "duplicate_version", "current_relative_path": "course/duplicate-version.md", "path_history": ["course/duplicate-version.md"], "current_content_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "revision": 1}
+  ]
+}

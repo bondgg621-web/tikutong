@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capability-matrix.schema.json",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "skill_version", "python_version", "input_root_fingerprint", "workspace_root_fingerprint", "network", "capabilities"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "generated_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"},
+    "skill_version": {"type": "string", "minLength": 1},
+    "python_version": {"type": "string", "minLength": 1},
+    "input_root_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "workspace_root_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "network": {"type": "object", "required": ["status", "attempted"], "additionalProperties": false, "properties": {"status": {"const": "not_authorized"}, "attempted": {"const": false}}},
+    "capabilities": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "status", "detail"], "additionalProperties": false, "properties": {"id": {"type": "string", "minLength": 1}, "status": {"enum": ["available", "unavailable", "unsupported", "not_authorized"]}, "detail": {"type": "string", "minLength": 1}}}}
+  }
+}

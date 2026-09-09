@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "decisions": [
+    {"decision_id": "41000000-0000-4000-8000-000000000001", "candidate_id": "21000000-0000-4000-8000-000000000001", "candidate_revision": 1, "decision_type": "answer_resolution", "value": {"resolved_option_ids": ["31000000-0000-4000-8000-000000000001"]}, "evidence": [{"source_id": "11000000-0000-4000-8000-000000000002", "source_revision": 1, "locator": "line-1", "evidence_fingerprint": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}], "status": "valid"},
+    {"decision_id": "41000000-0000-4000-8000-000000000002", "candidate_id": "21000000-0000-4000-8000-000000000002", "candidate_revision": 1, "decision_type": "answer_resolution", "value": {"resolved_option_ids": ["32000000-0000-4000-8000-000000000001"]}, "evidence": [{"source_id": "11000000-0000-4000-8000-000000000002", "source_revision": 1, "locator": "line-2", "evidence_fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}], "status": "valid"},
+    {"decision_id": "41000000-0000-4000-8000-000000000003", "candidate_id": "21000000-0000-4000-8000-000000000003", "candidate_revision": 1, "decision_type": "answer_resolution", "value": {"resolved_option_ids": ["33000000-0000-4000-8000-000000000002"]}, "evidence": [{"source_id": "11000000-0000-4000-8000-000000000002", "source_revision": 1, "locator": "line-3", "evidence_fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}], "status": "valid"}
+  ]
+}

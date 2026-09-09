@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "single-choice-parse-run.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "source_id",
+    "phase",
+    "status",
+    "started_at",
+    "updated_at",
+    "input_root_fingerprint",
+    "workspace_root_fingerprint",
+    "artifacts"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+    "source_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+    "phase": {"type": "string", "enum": ["source_resolution", "parse", "candidate_materialization", "publication", "complete"]},
+    "status": {"type": "string", "enum": ["running", "complete", "needs_review", "failed"]},
+    "started_at": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"},
+    "updated_at": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"},
+    "input_root_fingerprint": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{64}$"},
+    "workspace_root_fingerprint": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{64}$"},
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "relative_path", "content_hash"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {"type": "string", "enum": ["parse_report", "parse_issues", "candidate"]},
+          "relative_path": {"type": "string", "minLength": 1},
+          "content_hash": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

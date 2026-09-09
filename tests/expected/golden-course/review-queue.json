@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "review_items": [
+    {"review_id": "51000000-0000-4000-8000-000000000001", "candidate_id": "21000000-0000-4000-8000-000000000004", "issue_code": "QB-ANSWER-MISSING", "blocking_level": "blocking", "status": "open", "allowed_user_actions": ["provide evidence", "retain"]},
+    {"review_id": "51000000-0000-4000-8000-000000000002", "candidate_id": "21000000-0000-4000-8000-000000000005", "issue_code": "QB-ANSWER-CONFLICT", "blocking_level": "blocking", "status": "open", "allowed_user_actions": ["choose evidence", "retain"]},
+    {"review_id": "51000000-0000-4000-8000-000000000003", "candidate_id": "21000000-0000-4000-8000-000000000009", "issue_code": "QB-IDENTITY-AMBIGUOUS", "blocking_level": "blocking", "status": "open", "allowed_user_actions": ["confirm mapping", "archive decision"]},
+    {"review_id": "51000000-0000-4000-8000-000000000004", "candidate_id": "21000000-0000-4000-8000-000000000006", "issue_code": "QB-OPTION-IDENTITY-AMBIGUOUS", "blocking_level": "review_required", "status": "open", "allowed_user_actions": ["confirm mapping", "rebind answer"]}
+  ]
+}

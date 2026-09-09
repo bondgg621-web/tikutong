@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run-state.schema.json",
+  "type": "object", "required": ["run_id", "manifest_source_id", "phase", "status"], "additionalProperties": false,
+  "properties": {"run_id": {"type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"}, "manifest_source_id": {"type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"}, "phase": {"enum": ["preflight", "candidate", "review", "decision", "complete"]}, "status": {"enum": ["running", "paused", "failed", "complete"]}}
+}

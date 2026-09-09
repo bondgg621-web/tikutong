@@ -1,0 +1,1131 @@
+{
+  "$id": "answer-association-proposal.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidate_artifact_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "candidate_artifact_path": {
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?![A-Za-z]:)[^\\\\]+$",
+      "type": "string"
+    },
+    "confirmation_base": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "direct"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "prepare_result"
+            },
+            "snapshot_id": {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            "transaction_id": {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "transaction_id",
+            "snapshot_id"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "entries": {
+      "items": {
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "adjudication": {
+                "const": null
+              },
+              "alternatives": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_ids": {
+                      "items": {
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "resolved_option_id",
+                    "evidence_ids"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "candidate_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "candidate_revision": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                ]
+              },
+              "conclusion": {
+                "const": "confirmable"
+              },
+              "decision_id": {
+                "const": null
+              },
+              "evidence": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_fingerprint": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "evidence_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "locator": {
+                      "pattern": "^line:[1-9][0-9]*$",
+                      "type": "string"
+                    },
+                    "question_number": {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "source_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "source_lexeme": {
+                      "pattern": "^[A-Z]$",
+                      "type": "string"
+                    },
+                    "source_revision": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "evidence_id",
+                    "source_id",
+                    "source_revision",
+                    "locator",
+                    "question_number",
+                    "source_lexeme",
+                    "evidence_fingerprint",
+                    "resolved_option_id"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "proposal_id": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "proposed_option_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "proposed_source_label": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[A-Z]$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "question_locator": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                ]
+              },
+              "question_number": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "review_issue_key": {
+                "const": null
+              },
+              "review_item_id": {
+                "const": null
+              }
+            },
+            "required": [
+              "proposal_id",
+              "candidate_id",
+              "candidate_revision",
+              "question_locator",
+              "question_number",
+              "conclusion",
+              "proposed_option_id",
+              "proposed_source_label",
+              "alternatives",
+              "evidence",
+              "review_item_id",
+              "decision_id",
+              "review_issue_key",
+              "adjudication"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "adjudication": {
+                "const": null
+              },
+              "alternatives": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_ids": {
+                      "items": {
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "resolved_option_id",
+                    "evidence_ids"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "candidate_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "candidate_revision": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                ]
+              },
+              "conclusion": {
+                "const": "conflict"
+              },
+              "decision_id": {
+                "const": null
+              },
+              "evidence": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_fingerprint": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "evidence_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "locator": {
+                      "pattern": "^line:[1-9][0-9]*$",
+                      "type": "string"
+                    },
+                    "question_number": {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "source_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "source_lexeme": {
+                      "pattern": "^[A-Z]$",
+                      "type": "string"
+                    },
+                    "source_revision": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "evidence_id",
+                    "source_id",
+                    "source_revision",
+                    "locator",
+                    "question_number",
+                    "source_lexeme",
+                    "evidence_fingerprint",
+                    "resolved_option_id"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "proposal_id": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "proposed_option_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "proposed_source_label": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[A-Z]$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "question_locator": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                ]
+              },
+              "question_number": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "review_issue_key": {
+                "const": null
+              },
+              "review_item_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "proposal_id",
+              "candidate_id",
+              "candidate_revision",
+              "question_locator",
+              "question_number",
+              "conclusion",
+              "proposed_option_id",
+              "proposed_source_label",
+              "alternatives",
+              "evidence",
+              "review_item_id",
+              "decision_id",
+              "review_issue_key",
+              "adjudication"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "adjudication": {
+                "const": null
+              },
+              "alternatives": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_ids": {
+                      "items": {
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "resolved_option_id",
+                    "evidence_ids"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "candidate_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "candidate_revision": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                ]
+              },
+              "conclusion": {
+                "const": "missing"
+              },
+              "decision_id": {
+                "const": null
+              },
+              "evidence": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_fingerprint": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "evidence_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "locator": {
+                      "pattern": "^line:[1-9][0-9]*$",
+                      "type": "string"
+                    },
+                    "question_number": {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "source_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "source_lexeme": {
+                      "pattern": "^[A-Z]$",
+                      "type": "string"
+                    },
+                    "source_revision": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "evidence_id",
+                    "source_id",
+                    "source_revision",
+                    "locator",
+                    "question_number",
+                    "source_lexeme",
+                    "evidence_fingerprint",
+                    "resolved_option_id"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "proposal_id": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "proposed_option_id": {
+                "const": null
+              },
+              "proposed_source_label": {
+                "const": null
+              },
+              "question_locator": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                ]
+              },
+              "question_number": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "review_issue_key": {
+                "const": null
+              },
+              "review_item_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "proposal_id",
+              "candidate_id",
+              "candidate_revision",
+              "question_locator",
+              "question_number",
+              "conclusion",
+              "proposed_option_id",
+              "proposed_source_label",
+              "alternatives",
+              "evidence",
+              "review_item_id",
+              "decision_id",
+              "review_issue_key",
+              "adjudication"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "adjudication": {
+                "const": null
+              },
+              "alternatives": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_ids": {
+                      "items": {
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "resolved_option_id",
+                    "evidence_ids"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "candidate_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "candidate_revision": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                ]
+              },
+              "conclusion": {
+                "const": "low_confidence"
+              },
+              "decision_id": {
+                "const": null
+              },
+              "evidence": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_fingerprint": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "evidence_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "locator": {
+                      "pattern": "^line:[1-9][0-9]*$",
+                      "type": "string"
+                    },
+                    "question_number": {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "source_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "source_lexeme": {
+                      "pattern": "^[A-Z]$",
+                      "type": "string"
+                    },
+                    "source_revision": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "evidence_id",
+                    "source_id",
+                    "source_revision",
+                    "locator",
+                    "question_number",
+                    "source_lexeme",
+                    "evidence_fingerprint",
+                    "resolved_option_id"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "proposal_id": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "proposed_option_id": {
+                "const": null
+              },
+              "proposed_source_label": {
+                "const": null
+              },
+              "question_locator": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                ]
+              },
+              "question_number": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "review_issue_key": {
+                "const": null
+              },
+              "review_item_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "proposal_id",
+              "candidate_id",
+              "candidate_revision",
+              "question_locator",
+              "question_number",
+              "conclusion",
+              "proposed_option_id",
+              "proposed_source_label",
+              "alternatives",
+              "evidence",
+              "review_item_id",
+              "decision_id",
+              "review_issue_key",
+              "adjudication"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "adjudication": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              },
+              "alternatives": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_ids": {
+                      "items": {
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "resolved_option_id",
+                    "evidence_ids"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "candidate_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "candidate_revision": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                ]
+              },
+              "conclusion": {
+                "const": "adjudicated"
+              },
+              "decision_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "evidence": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "evidence_fingerprint": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "evidence_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "locator": {
+                      "pattern": "^line:[1-9][0-9]*$",
+                      "type": "string"
+                    },
+                    "question_number": {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "resolved_option_id": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "source_id": {
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                      "type": "string"
+                    },
+                    "source_lexeme": {
+                      "pattern": "^[A-Z]$",
+                      "type": "string"
+                    },
+                    "source_revision": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "evidence_id",
+                    "source_id",
+                    "source_revision",
+                    "locator",
+                    "question_number",
+                    "source_lexeme",
+                    "evidence_fingerprint",
+                    "resolved_option_id"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "proposal_id": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "proposed_option_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "proposed_source_label": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "pattern": "^[A-Z]$",
+                    "type": "string"
+                  }
+                ]
+              },
+              "question_locator": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                ]
+              },
+              "question_number": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "review_issue_key": {
+                "const": null
+              },
+              "review_item_id": {
+                "const": null
+              }
+            },
+            "required": [
+              "proposal_id",
+              "candidate_id",
+              "candidate_revision",
+              "question_locator",
+              "question_number",
+              "conclusion",
+              "proposed_option_id",
+              "proposed_source_label",
+              "alternatives",
+              "evidence",
+              "review_item_id",
+              "decision_id",
+              "review_issue_key",
+              "adjudication"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "adjudication": {
+                "const": null
+              },
+              "alternatives": {
+                "maxItems": 0,
+                "type": "array"
+              },
+              "candidate_id": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "candidate_revision": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "conclusion": {
+                "const": "stale"
+              },
+              "decision_id": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "evidence": {
+                "maxItems": 0,
+                "type": "array"
+              },
+              "proposal_id": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "proposed_option_id": {
+                "const": null
+              },
+              "proposed_source_label": {
+                "const": null
+              },
+              "question_locator": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "question_number": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "review_issue_key": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "review_item_id": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "proposal_id",
+              "candidate_id",
+              "candidate_revision",
+              "question_locator",
+              "question_number",
+              "conclusion",
+              "proposed_option_id",
+              "proposed_source_label",
+              "alternatives",
+              "evidence",
+              "review_item_id",
+              "decision_id",
+              "review_issue_key",
+              "adjudication"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "type": "array"
+    },
+    "manifest_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "manifest_path": {
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?![A-Za-z]:)[^\\\\]+$",
+      "type": "string"
+    },
+    "prepared_from_pointer": {
+      "oneOf": [
+        {
+          "const": "ABSENT"
+        },
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      ]
+    },
+    "proposal_run_id": {
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "question_source_id": {
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0"
+    }
+  },
+  "required": [
+    "schema_version",
+    "proposal_run_id",
+    "manifest_path",
+    "manifest_hash",
+    "candidate_artifact_path",
+    "candidate_artifact_hash",
+    "question_source_id",
+    "prepared_from_pointer",
+    "confirmation_base",
+    "entries"
+  ],
+  "type": "object"
+}

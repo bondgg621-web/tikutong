@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "bank_id": "91000000-0000-4000-8000-000000000001",
+  "title": "QBC v1.0 入门示例",
+  "questions": [
+    {
+      "question_id": "92000000-0000-4000-8000-000000000001",
+      "question_revision": 1,
+      "question_type": "single_choice",
+      "stem": "正常成人视力通常记录为？",
+      "options": [
+        {
+          "label": "A",
+          "text": "1.0",
+          "source_option_id": "93000000-0000-4000-8000-000000000001"
+        },
+        {
+          "label": "B",
+          "text": "0.1",
+          "source_option_id": "93000000-0000-4000-8000-000000000002"
+        }
+      ],
+      "source_reference": {
+        "source_id": "81000000-0000-4000-8000-000000000001",
+        "locator": "paragraph:2"
+      },
+      "status": "candidate",
+      "chapter": "眼科学",
+      "metadata": {
+        "qbc_extraction_notes": "原文未提供答案；保持 null。"
+      }
+    },
+    {
+      "question_id": "92000000-0000-4000-8000-000000000002",
+      "question_revision": 1,
+      "question_type": "multiple_choice",
+      "stem": "下列哪些属于脑神经？",
+      "options": [
+        {
+          "label": "A",
+          "text": "视神经",
+          "source_option_id": "93000000-0000-4000-8000-000000000003"
+        },
+        {
+          "label": "B",
+          "text": "桡神经",
+          "source_option_id": "93000000-0000-4000-8000-000000000004"
+        },
+        {
+          "label": "C",
+          "text": "面神经",
+          "source_option_id": "93000000-0000-4000-8000-000000000005"
+        }
+      ],
+      "source_reference": {
+        "source_id": "81000000-0000-4000-8000-000000000002",
+        "locator": "paragraph:2"
+      },
+      "status": "candidate",
+      "chapter": "脑神经",
+      "answer": [
+        "A",
+        "C"
+      ],
+      "explanation": "视神经和面神经均属于脑神经。"
+    },
+    {
+      "question_id": "92000000-0000-4000-8000-000000000003",
+      "question_revision": 1,
+      "question_type": "true_false",
+      "stem": "周围神经属于中枢神经系统。",
+      "options": [],
+      "source_reference": {
+        "source_id": "81000000-0000-4000-8000-000000000003",
+        "locator": "image:1"
+      },
+      "status": "candidate",
+      "metadata": {
+        "qbc_extraction_notes": "题目文字由 Agent 从图片读取。"
+      },
+      "answer": false
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "81000000-0000-4000-8000-000000000001",
+      "source_file": "source/questions.md",
+      "source_type": "markdown"
+    },
+    {
+      "source_id": "81000000-0000-4000-8000-000000000002",
+      "source_file": "source/question.docx",
+      "source_type": "docx"
+    },
+    {
+      "source_id": "81000000-0000-4000-8000-000000000003",
+      "source_file": "source/question.png",
+      "source_type": "image"
+    }
+  ]
+}

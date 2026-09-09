@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "question-bank-interchange.schema.json",
+  "type": "object", "required": ["manifest", "candidates", "review_queue", "decisions"], "additionalProperties": false,
+  "properties": {"manifest": {"$ref": "manifest.schema.json"}, "candidates": {"$ref": "candidate.schema.json"}, "review_queue": {"$ref": "review-item.schema.json"}, "decisions": {"$ref": "decision.schema.json"}}
+}

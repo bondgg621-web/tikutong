@@ -1,0 +1,68 @@
+{
+  "questions": [
+    {
+      "question_type": "single_choice",
+      "stem": "正常成人视力通常记录为？",
+      "options": [
+        {
+          "label": "A",
+          "text": "1.0"
+        },
+        {
+          "label": "B",
+          "text": "0.1"
+        }
+      ],
+      "answer": null,
+      "explanation": null,
+      "chapter": "眼科学",
+      "source_reference": {
+        "source_id": "61000000-0000-4000-8000-000000000001",
+        "locator": "page:1"
+      },
+      "extraction_notes": "原扫描件答案标记不清晰。"
+    },
+    {
+      "question_type": "multiple_choice",
+      "stem": "下列哪些属于脑神经？",
+      "options": [
+        {
+          "label": "A",
+          "text": "视神经"
+        },
+        {
+          "label": "B",
+          "text": "桡神经"
+        },
+        {
+          "label": "C",
+          "text": "面神经"
+        }
+      ],
+      "answer": [
+        "A",
+        "C"
+      ],
+      "explanation": "视神经和面神经均属于脑神经。",
+      "chapter": "脑神经",
+      "source_reference": {
+        "source_id": "61000000-0000-4000-8000-000000000001",
+        "locator": "page:2"
+      },
+      "extraction_notes": null
+    },
+    {
+      "question_type": "true_false",
+      "stem": "周围神经属于中枢神经系统。",
+      "options": [],
+      "answer": false,
+      "explanation": null,
+      "chapter": null,
+      "source_reference": {
+        "source_id": "61000000-0000-4000-8000-000000000002",
+        "locator": "page:3"
+      },
+      "extraction_notes": null
+    }
+  ]
+}

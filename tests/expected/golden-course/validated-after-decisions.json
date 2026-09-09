@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "validated_candidate_ids": [
+    "21000000-0000-4000-8000-000000000001",
+    "21000000-0000-4000-8000-000000000002",
+    "21000000-0000-4000-8000-000000000003"
+  ],
+  "gate": "Each listed candidate has a current valid answer-resolution decision; reviewed or ambiguous candidates remain outside validated."
+}

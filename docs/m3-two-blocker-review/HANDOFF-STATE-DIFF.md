@@ -1,0 +1,31 @@
+# Milestone 3 交接状态差异
+
+## 进入本轮时
+
+```text
+M1 = ACCEPTED
+M2 = ACCEPTED
+M3_SPEC_REVIEW = FAIL
+M3_ACCEPTANCE = NOT_GRANTED
+IMPLEMENTATION_PLAN_AUTHORIZED = NO
+IMPLEMENTATION_AUTHORIZED = NO
+```
+
+基线 SHA-256：`6a076b8090a57d5a36fb4916f4c2f4e49e90687ce639e0636b0895c752e0375d`
+
+## 本轮结束时
+
+```text
+M1 = ACCEPTED
+M2 = ACCEPTED
+M3_SPEC_REVIEW = FAIL
+M3_ACCEPTANCE = NOT_GRANTED
+IMPLEMENTATION_PLAN_AUTHORIZED = NO
+IMPLEMENTATION_AUTHORIZED = NO
+```
+
+当前规格 SHA-256：`84c4fbe8a02346df4b05761ca8345199c88ffb033c4fd9e7d9a42e7b643a4374`
+
+P1/P2 已完成规格闭环并通过独立复核，但状态没有提升，因为新的全规格审查发现 `archive_stale` 没有合法 proposal entry 可绑定。
+
+下一步必须等待人工重新授权，只修这个新 blocker；不得创建实施计划或编码。

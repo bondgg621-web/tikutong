@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "single-choice-parse-issues.schema.json",
+  "type": "object",
+  "required": ["schema_version", "run_id", "source_id", "issues"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+    "source_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+    "issues": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["issue_id", "code", "blocking_level", "status", "source_id", "locator", "summary", "allowed_user_actions"],
+            "additionalProperties": false,
+            "properties": {
+              "issue_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "code": {"type": "string", "const": "QB-SOURCE-UNSUPPORTED"},
+              "blocking_level": {"type": "string", "const": "blocking"},
+              "status": {"type": "string", "const": "open"},
+              "source_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "locator": {"type": "string", "pattern": "^(?!.*[\\r\\n])line:[1-9][0-9]*$"},
+              "summary": {"type": "string", "minLength": 1},
+              "allowed_user_actions": {"type": "array", "const": ["retain", "exclude", "provide adapter"]}
+            }
+          },
+          {
+            "type": "object",
+            "required": ["issue_id", "code", "blocking_level", "status", "source_id", "locator", "summary", "allowed_user_actions"],
+            "additionalProperties": false,
+            "properties": {
+              "issue_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "code": {"type": "string", "const": "QB-SOURCE-READ-FAILED"},
+              "blocking_level": {"type": "string", "const": "blocking"},
+              "status": {"type": "string", "const": "open"},
+              "source_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "locator": {"type": "string", "pattern": "^(?!.*[\\r\\n])line:[1-9][0-9]*$"},
+              "summary": {"type": "string", "minLength": 1},
+              "allowed_user_actions": {"type": "array", "const": ["retry", "retain", "exclude"]}
+            }
+          },
+          {
+            "type": "object",
+            "required": ["issue_id", "code", "blocking_level", "status", "source_id", "locator", "summary", "allowed_user_actions"],
+            "additionalProperties": false,
+            "properties": {
+              "issue_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "code": {"type": "string", "const": "QB-TYPE-UNSUPPORTED"},
+              "blocking_level": {"type": "string", "const": "blocking"},
+              "status": {"type": "string", "const": "open"},
+              "source_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "locator": {"type": "string", "pattern": "^(?!.*[\\r\\n])line:[1-9][0-9]*$"},
+              "summary": {"type": "string", "minLength": 1},
+              "allowed_user_actions": {"type": "array", "const": ["retain", "mark unsupported"]}
+            }
+          },
+          {
+            "type": "object",
+            "required": ["issue_id", "code", "blocking_level", "status", "source_id", "locator", "summary", "allowed_user_actions"],
+            "additionalProperties": false,
+            "properties": {
+              "issue_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "code": {"type": "string", "const": "QB-STRUCTURE-AMBIGUOUS"},
+              "blocking_level": {"type": "string", "const": "review_required"},
+              "status": {"type": "string", "const": "open"},
+              "source_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "locator": {"type": "string", "pattern": "^(?!.*[\\r\\n])line:[1-9][0-9]*$"},
+              "summary": {"type": "string", "minLength": 1},
+              "allowed_user_actions": {"type": "array", "const": ["correct source", "retain", "exclude"]}
+            }
+          },
+          {
+            "type": "object",
+            "required": ["issue_id", "code", "blocking_level", "status", "source_id", "locator", "summary", "allowed_user_actions"],
+            "additionalProperties": false,
+            "properties": {
+              "issue_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "code": {"type": "string", "const": "QB-IDENTITY-AMBIGUOUS"},
+              "blocking_level": {"type": "string", "const": "blocking"},
+              "status": {"type": "string", "const": "open"},
+              "source_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "locator": {"type": "string", "pattern": "^(?!.*[\\r\\n])line:[1-9][0-9]*$"},
+              "summary": {"type": "string", "minLength": 1},
+              "allowed_user_actions": {"type": "array", "const": ["confirm mapping", "archive decision"]}
+            }
+          },
+          {
+            "type": "object",
+            "required": ["issue_id", "code", "blocking_level", "status", "source_id", "locator", "summary", "allowed_user_actions"],
+            "additionalProperties": false,
+            "properties": {
+              "issue_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "code": {"type": "string", "const": "QB-SECURITY-INSTRUCTION-DATA"},
+              "blocking_level": {"type": "string", "const": "blocking"},
+              "status": {"type": "string", "const": "open"},
+              "source_id": {"type": "string", "pattern": "^(?!.*[\\r\\n])[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+              "locator": {"type": "string", "pattern": "^(?!.*[\\r\\n])line:[1-9][0-9]*$"},
+              "summary": {"type": "string", "minLength": 1},
+              "allowed_user_actions": {"type": "array", "const": ["retain as data", "quarantine"]}
+            }
+          }
+        ]
+      }
+    }
+  }
+}

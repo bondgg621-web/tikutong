@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QuestionItem",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "question_id",
+    "question_revision",
+    "question_type",
+    "stem",
+    "options",
+    "source_reference",
+    "status"
+  ],
+  "properties": {
+    "question_id": {
+      "type": "string"
+    },
+    "question_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "question_type": {
+      "type": "string"
+    },
+    "stem": {
+      "type": "string"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "text", "source_option_id"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string"
+          },
+          "source_option_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+          }
+        }
+      }
+    },
+    "source_reference": {
+      "type": "object"
+    },
+    "status": {
+      "type": "string"
+    },
+    "chapter": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "answer": {},
+    "explanation": {
+      "type": "string"
+    }
+  }
+}

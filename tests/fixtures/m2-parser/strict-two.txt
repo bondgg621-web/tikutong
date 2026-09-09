@@ -1,0 +1,7 @@
+1. [single_choice] Which synthetic header uses a dot?
+   - A. Alpha
+   * B) Beta
+
+17) [single_choice] Which synthetic header uses a parenthesis?
+	+ A) First
+    - B. Second
