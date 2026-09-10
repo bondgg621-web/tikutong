@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikuTong Preview</title>
+    <style>
+        :root {
+            --primary: #263442;
+            --sidebar-bg: #eef2f5;
+            --accent: #2f80ed;
+            --success: #208653;
+            --danger: #d64545;
+            --warning: #b7791f;
+            --bg: #f7f8fa;
+            --line: #d8dee4;
+            --text: #28313b;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+        }
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 18px;
+            background: var(--primary);
+            color: #fff;
+        }
+        .product-title {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+        }
+        .product-cn-subtitle {
+            margin-top: 2px;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.45;
+        }
+        .product-en-title {
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            color: rgba(255,255,255,0.88);
+        }
+        .product-en-subtitle {
+            margin: 2px 0 14px;
+            font-size: 11px;
+            line-height: 1.45;
+            color: rgba(255,255,255,0.72);
+        }
+        .toolbar {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        button, input[type="number"] {
+            font: inherit;
+        }
+        .btn {
+            padding: 10px 12px;
+            border: 0;
+            border-radius: 5px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn:hover { filter: brightness(0.96); }
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .btn.secondary { background: #5f6f7f; }
+        .btn.danger { background: var(--danger); }
+        .btn.success { background: var(--success); }
+        .btn.warning { background: var(--warning); }
+        .btn.small {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+        .status-line {
+            margin-top: 10px;
+            font-size: 12px;
+            line-height: 1.45;
+            color: rgba(255,255,255,0.86);
+        }
+        .chapter-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .chapter-item {
+            padding: 14px 18px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--line);
+            transition: background 0.16s;
+        }
+        .chapter-item:hover { background: #dfe6ec; }
+        .chapter-item.active {
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+        }
+        .mistake-book {
+            background: #fff1f1;
+            color: var(--danger);
+            font-weight: 700;
+        }
+        .favorite-book {
+            background: #fff8df;
+            color: #8a6113;
+            font-weight: 700;
+        }
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .header-info {
+            padding: 18px 24px 12px;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+        }
+        .top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .chapter-title {
+            margin: 0;
+            font-size: 22px;
+        }
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 260px;
+        }
+        .progress-bar-container {
+            flex: 1;
+            height: 10px;
+            background: #e8edf1;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: var(--success);
+            transition: width 0.2s;
+        }
+        .control-row {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        .jump-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0;
+        }
+        .jump-box input {
+            width: 86px;
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            border-radius: 5px;
+        }
+        .study-area {
+            flex: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 220px;
+            overflow: hidden;
+            min-height: 0;
+        }
+        .question-pane {
+            overflow-y: auto;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .question-card {
+            flex: 1;
+            width: 100%;
+            min-height: 100%;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 32px 36px;
+            box-shadow: 0 2px 8px rgba(31, 41, 55, 0.04);
+        }
+        .question-text {
+            /* question-stem-band-v2 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            width: 100%;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.65;
+            margin-bottom: 26px;
+            padding: 18px 22px;
+            border: 1px solid #d8e6f7;
+            border-left: 5px solid var(--accent);
+            border-radius: 6px;
+            background: linear-gradient(90deg, #f0f6ff 0%, #f7fbff 60%, #ffffff 100%);
+            text-align: left;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+        .question-header-row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .favorite-btn {
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            border: 1px solid #d6a82f;
+            border-radius: 5px;
+            background: #fff;
+            color: #8a6113;
+            font-size: 25px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .favorite-btn:hover { background: #fff8df; }
+        .favorite-btn.active {
+            background: #fff2b8;
+            color: #6f4d08;
+        }
+        .question-type {
+            display: inline-block;
+            margin: 0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #e9f2ff;
+            color: #1f66c1;
+            font-size: 13px;
+            vertical-align: 2px;
+            white-space: nowrap;
+            box-shadow: inset 0 0 0 1px rgba(47, 128, 237, 0.08);
+        }
+        #qText {
+            display: block;
+            width: 100%;
+            min-width: 0;
+        }
+        .options-list {
+            display: grid;
+            gap: 10px;
+        }
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 13px 14px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .option-label input {
+            margin-top: 4px;
+        }
+        .option-label:hover { background: #f4f8fc; }
+        .option-correct {
+            border-color: var(--success);
+            background: #ebf8f1;
+        }
+        .option-wrong {
+            border-color: var(--danger);
+            background: #fff1f1;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .feedback-box {
+            display: none;
+            margin-top: 18px;
+            padding: 16px;
+            border-left: 5px solid #b8c2cc;
+            background: #f7f9fb;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+        .feedback-box.show { display: block; }
+        .feedback-correct { border-left-color: var(--success); }
+        .feedback-wrong { border-left-color: var(--danger); }
+        .no-options-note {
+            padding: 13px 14px;
+            border: 1px dashed var(--line);
+            border-radius: 6px;
+            background: #fbfcfd;
+            color: #596672;
+            line-height: 1.6;
+        }
+        .explanation-title {
+            margin-top: 10px;
+            font-weight: 700;
+        }
+        .grid-pane {
+            overflow-y: auto;
+            padding: 14px;
+            background: #fff;
+            border-left: 1px solid var(--line);
+        }
+        .grid-pane h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+        .grid-legend {
+            display: grid;
+            gap: 5px;
+            margin-bottom: 12px;
+            color: #596672;
+            font-size: 12px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            border: 1px solid var(--line);
+            background: #fff;
+        }
+        .dot.done { background: #e8f5ee; border-color: var(--success); }
+        .dot.wrong { background: #ffe2e2; border-color: var(--danger); }
+        .dot.current { background: #e9f2ff; border-color: var(--accent); }
+        .dot.favorite { background: #fff2b8; border-color: #d6a82f; }
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+            gap: 7px;
+        }
+        .q-jump {
+            min-height: 34px;
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            background: #fff;
+            color: var(--text);
+            cursor: pointer;
+        }
+        .q-jump.answered {
+            background: #e8f5ee;
+            border-color: var(--success);
+        }
+        .q-jump.wrong {
+            background: #ffe2e2;
+            border-color: var(--danger);
+            color: #9b2222;
+            font-weight: 700;
+        }
+        .q-jump.current {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-weight: 700;
+        }
+        .q-jump.favorite {
+            box-shadow: inset 0 -3px 0 #d6a82f;
+        }
+        .empty-state {
+            padding: 24px;
+            color: #66727f;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+        }
+        @media (max-width: 900px) {
+            body { flex-direction: column; height: auto; min-height: 100vh; }
+            .sidebar { width: 100%; max-height: 280px; }
+            .study-area { grid-template-columns: 1fr; }
+            .grid-pane { border-left: 0; border-top: 1px solid var(--line); }
+            .top-row { align-items: flex-start; flex-direction: column; }
+            .progress-wrapper { width: 100%; min-width: 0; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="product-title">题库通</h3>
+            <div class="product-cn-subtitle">本地预览与做题工具</div>
+            <div class="product-en-title">TikuTong Preview</div>
+            <div class="product-en-subtitle">Optional local preview &amp; practice tool for TikuTong Standard CSV.</div>
+            <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+            <input type="file" id="progressImportInput" accept=".json" style="display: none;">
+            <div class="toolbar">
+                <button class="btn" id="uploadBtn">选择本地 CSV</button>
+                <button class="btn warning" id="importProgressBtn" disabled>导入进度 JSON</button>
+                <button class="btn success" id="exportFullProgressBtn" disabled>导出完整进度 JSON</button>
+                <button class="btn success" id="exportMistakesBtn" disabled>导出错题 CSV</button>
+                <button class="btn danger" id="clearProgressBtn" disabled>清空本题库记录</button>
+            </div>
+            <div class="status-line" id="storageStatus">题库内容在浏览器本地处理；浏览器会自动记忆进度。TikuTong Preview is an optional consumer, not part of the canonical compiler core.</div>
+        </div>
+        <ul class="chapter-list" id="chapterList">
+            <li class="chapter-item" style="text-align:center;color:#66727f;cursor:default;">请先选择本地题库文件</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="header-info">
+            <div class="top-row">
+                <h2 class="chapter-title" id="displayChapterTitle">等待选择 CSV...</h2>
+                <div class="progress-wrapper">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <span id="progressText">0 / 0</span>
+                </div>
+            </div>
+            <div class="control-row">
+                <span class="jump-box">
+                    <input type="number" id="jumpInput" min="1" placeholder="题号">
+                    <button class="btn small" id="jumpBtn" disabled>跳转</button>
+                </span>
+                <button class="btn small secondary" id="prevWrongBtn" disabled>上一错题</button>
+                <button class="btn small secondary" id="nextWrongBtn" disabled>下一错题</button>
+                <button class="btn small secondary" id="prevFavoriteBtn" disabled>上一收藏</button>
+                <button class="btn small secondary" id="nextFavoriteBtn" disabled>下一收藏</button>
+                <button class="btn small secondary" id="nextUnansweredBtn" disabled>下一未答</button>
+                <button class="btn small warning" id="memorizeModeBtn">背题模式：关</button>
+            </div>
+        </header>
+
+        <section class="study-area">
+            <div class="question-pane">
+                <div class="empty-state" id="emptyState">选择 TikuTong Standard CSV 后开始预览或练习。精确表头：全局序号、试卷/章节、题型、题干、A、B、C、D、E、正确答案、解析。</div>
+                <div class="question-card" id="questionCard" style="display:none;">
+                    <div class="question-text">
+                        <div class="question-header-row">
+                            <span class="question-type" id="qType">题型</span>
+                            <button class="favorite-btn" id="favoriteBtn" type="button" aria-pressed="false" title="收藏本题">☆</button>
+                        </div>
+                        <span id="qText">题目内容</span>
+                    </div>
+                    <div class="options-list" id="optionsList"></div>
+                    <div class="actions">
+                        <button class="btn" id="submitBtn">确认多选答案</button>
+                        <button class="btn secondary" id="prevBtn">上一题</button>
+                        <button class="btn secondary" id="nextBtn">下一题</button>
+                    </div>
+                    <div class="feedback-box" id="feedbackBox">
+                        <h3 id="resultTitle" style="margin-top:0;"></h3>
+                        <div><strong>参考答案：</strong><span id="correctAnswerText"></span></div>
+                        <div><strong>你的答案：</strong><span id="userAnswerText"></span></div>
+                        <div class="explanation-title">解析：</div>
+                        <div id="explanationText"></div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="grid-pane">
+                <h3>题号跳转</h3>
+                <div class="grid-legend">
+                    <span class="legend-item"><span class="dot current"></span>当前题</span>
+                    <span class="legend-item"><span class="dot done"></span>已答对</span>
+                    <span class="legend-item"><span class="dot wrong"></span>错题</span>
+                    <span class="legend-item"><span class="dot favorite"></span>已收藏</span>
+                </div>
+                <div class="question-grid" id="questionGrid"></div>
+            </aside>
+        </section>
+    </main>
+
+    <script>
+        let allQuestions = [];
+        let chapters = {};
+        let currentChapter = "";
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let currentBankKey = "";
+        let currentFileName = "";
+        let memorizeMode = false;
+        let importWarnings = [];
+
+        const fileInput = document.getElementById("csvFileInput");
+        const progressImportInput = document.getElementById("progressImportInput");
+        const uploadBtn = document.getElementById("uploadBtn");
+        const importProgressBtn = document.getElementById("importProgressBtn");
+        const exportFullProgressBtn = document.getElementById("exportFullProgressBtn");
+        const exportMistakesBtn = document.getElementById("exportMistakesBtn");
+        const clearProgressBtn = document.getElementById("clearProgressBtn");
+        const storageStatus = document.getElementById("storageStatus");
+        const chapterListEl = document.getElementById("chapterList");
+        const displayChapterTitle = document.getElementById("displayChapterTitle");
+        const progressBar = document.getElementById("progressBar");
+        const progressText = document.getElementById("progressText");
+        const emptyState = document.getElementById("emptyState");
+        const questionCard = document.getElementById("questionCard");
+        const qTypeEl = document.getElementById("qType");
+        const qTextEl = document.getElementById("qText");
+        const optionsListEl = document.getElementById("optionsList");
+        const submitBtn = document.getElementById("submitBtn");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const feedbackBox = document.getElementById("feedbackBox");
+        const resultTitle = document.getElementById("resultTitle");
+        const correctAnswerText = document.getElementById("correctAnswerText");
+        const userAnswerText = document.getElementById("userAnswerText");
+        const explanationText = document.getElementById("explanationText");
+        const questionGrid = document.getElementById("questionGrid");
+        const jumpInput = document.getElementById("jumpInput");
+        const jumpBtn = document.getElementById("jumpBtn");
+        const prevWrongBtn = document.getElementById("prevWrongBtn");
+        const nextWrongBtn = document.getElementById("nextWrongBtn");
+        const prevFavoriteBtn = document.getElementById("prevFavoriteBtn");
+        const nextFavoriteBtn = document.getElementById("nextFavoriteBtn");
+        const nextUnansweredBtn = document.getElementById("nextUnansweredBtn");
+        const memorizeModeBtn = document.getElementById("memorizeModeBtn");
+        const favoriteBtn = document.getElementById("favoriteBtn");
+
+        uploadBtn.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            try {
+                const text = await readTextFile(file);
+                currentFileName = file.name;
+                currentBankKey = "quiz-progress:" + hashText(text);
+                const parsed = parseCSV(text);
+                validateStandardCsvHeaders(parseCSV.lastHeaders);
+                processData(parsed);
+                if (allQuestions.length === 0) {
+                    throw new Error("Standard CSV 中没有可显示的题目。");
+                }
+                restoreProgress();
+                renderSidebar();
+                const saved = readProgress();
+                const firstChapter = saved.lastChapter && chapters[saved.lastChapter] ? saved.lastChapter : Object.keys(chapters)[0];
+                if (firstChapter) {
+                    selectChapter(firstChapter, saved.lastIndex || 0);
+                }
+                updateStorageStatus("已加载：" + file.name + "；共 " + allQuestions.length + " 题；内容仅在当前浏览器中处理，进度会尝试保存在本机浏览器。");
+            } catch (err) {
+                updateStorageStatus("题库读取失败：" + err.message);
+            }
+        });
+
+        importProgressBtn.addEventListener("click", () => progressImportInput.click());
+        progressImportInput.addEventListener("change", async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            try {
+                const payload = JSON.parse(await file.text());
+                importLegacyProgress(payload);
+                progressImportInput.value = "";
+            } catch (err) {
+                updateStorageStatus("进度导入失败：" + err.message);
+            }
+        });
+
+        async function readTextFile(file) {
+            const buffer = await file.arrayBuffer();
+            const bytes = new Uint8Array(buffer);
+            const encodings = ["utf-8", "gb18030", "gbk"];
+            for (const encoding of encodings) {
+                try {
+                    return new TextDecoder(encoding, { fatal: true }).decode(bytes);
+                } catch {}
+            }
+            return new TextDecoder("utf-8").decode(bytes);
+        }
+
+        function normalizeHeader(header) {
+            return String(header || "").replace(/^\uFEFF/, "").trim();
+        }
+
+        function countDelimiter(line, delimiter) {
+            let count = 0;
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                const next = line[i + 1];
+                if (inQuotes && ch === '"' && next === '"') {
+                    i++;
+                } else if (ch === '"') {
+                    inQuotes = !inQuotes;
+                } else if (!inQuotes && ch === delimiter) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        function detectDelimiter(input) {
+            const firstLine = String(input || "").split(/\r?\n/).find(line => line.trim()) || "";
+            const candidates = [",", "\t", ";"];
+            return candidates
+                .map(delimiter => ({ delimiter, count: countDelimiter(firstLine, delimiter) }))
+                .sort((a, b) => b.count - a.count)[0].delimiter;
+        }
+
+        function parseCSV(text) {
+            const rows = [];
+            let row = [];
+            let field = "";
+            let inQuotes = false;
+            const input = String(text || "").replace(/^\uFEFF/, "");
+            const delimiter = detectDelimiter(input);
+            for (let i = 0; i < input.length; i++) {
+                const ch = input[i];
+                const next = input[i + 1];
+                if (inQuotes) {
+                    if (ch === '"' && next === '"') {
+                        field += '"';
+                        i++;
+                    } else if (ch === '"') {
+                        inQuotes = false;
+                    } else {
+                        field += ch;
+                    }
+                } else if (ch === '"') {
+                    inQuotes = true;
+                } else if (ch === delimiter) {
+                    row.push(field);
+                    field = "";
+                } else if (ch === "\n") {
+                    row.push(field);
+                    rows.push(row);
+                    row = [];
+                    field = "";
+                } else if (ch !== "\r") {
+                    field += ch;
+                }
+            }
+            row.push(field);
+            if (row.length > 1 || row[0] !== "") rows.push(row);
+            if (rows.length === 0) return [];
+            const headers = rows[0].map(normalizeHeader);
+            parseCSV.lastHeaders = headers;
+            return rows.slice(1).filter(r => r.some(v => String(v || "").trim() !== "")).map(r => {
+                const obj = {};
+                headers.forEach((h, idx) => obj[h] = r[idx] || "");
+                return obj;
+            });
+        }
+
+        const STANDARD_CSV_HEADERS = [
+            "全局序号", "试卷/章节", "题型", "题干", "A", "B", "C", "D", "E", "正确答案", "解析"
+        ];
+
+        function validateStandardCsvHeaders(headers) {
+            const actual = Array.isArray(headers) ? headers : [];
+            const exact = actual.length === STANDARD_CSV_HEADERS.length
+                && STANDARD_CSV_HEADERS.every((header, index) => actual[index] === header);
+            if (!exact) {
+                throw new Error("CSV 表头必须严格使用 TikuTong Standard CSV 的 11 列：" + STANDARD_CSV_HEADERS.join("、"));
+            }
+        }
+
+        const FIELD_ALIASES = {
+            id: ["全局序号"],
+            chapter: ["试卷/章节"],
+            type: ["题型"],
+            text: ["题干"],
+            answer: ["正确答案"],
+            explanation: ["解析"]
+        };
+
+        function getCell(row, names) {
+            for (const name of names) {
+                if (Object.prototype.hasOwnProperty.call(row, name)) {
+                    const value = String(row[name] ?? "").trim();
+                    if (value) return value;
+                }
+            }
+            return "";
+        }
+
+        function hasOptionValues(options) {
+            return Object.values(options || {}).some(value => String(value || "").trim());
+        }
+
+        function readExplicitOptions(row) {
+            return {
+                A: getCell(row, ["A"]),
+                B: getCell(row, ["B"]),
+                C: getCell(row, ["C"]),
+                D: getCell(row, ["D"]),
+                E: getCell(row, ["E"])
+            };
+        }
+
+        function extractInlineOptions(text) {
+            const lines = String(text || "").replace(/\r\n?/g, "\n").split("\n");
+            const options = { A: "", B: "", C: "", D: "", E: "" };
+            const stemLines = [];
+            let currentKey = "";
+            let seenOption = false;
+
+            lines.forEach(line => {
+                const match = line.match(/^\s*([A-E])[\.\．、:：]\s*(.*)$/i);
+                if (match) {
+                    currentKey = match[1].toUpperCase();
+                    options[currentKey] = match[2].trim();
+                    seenOption = true;
+                    return;
+                }
+
+                if (seenOption && currentKey) {
+                    const continuation = line.trim();
+                    if (continuation) {
+                        options[currentKey] = [options[currentKey], continuation].filter(Boolean).join("\n");
+                    }
+                } else {
+                    stemLines.push(line);
+                }
+            });
+
+            return {
+                stem: stemLines.join("\n").trim(),
+                options
+            };
+        }
+
+        function buildOptions(row, type, answer, inlineOptions = {}) {
+            let options = readExplicitOptions(row);
+            if (!hasOptionValues(options) && hasOptionValues(inlineOptions)) {
+                options = { A: "", B: "", C: "", D: "", E: "", ...inlineOptions };
+            }
+            if (!hasOptionValues(options) && /判断|是非|true|false|正确|错误/.test(type + " " + answer)) {
+                options.A = "正确";
+                options.B = "错误";
+            }
+            return options;
+        }
+
+        function buildExplanation(row) {
+            return getCell(row, FIELD_ALIASES.explanation);
+        }
+
+        function normalizeQuestionText(text) {
+            return String(text || "")
+                .replace(/^\s*(?:第\s*)?\d+\s*[\.、．）)]\s*/, "")
+                .trim();
+        }
+
+        function normalizeQuestionType(type, rowNumber) {
+            const originalType = String(type || "").trim();
+            if (!["单选题", "多选题", "判断题"].includes(originalType)) {
+                throw new Error(`第${rowNumber}行的题型不受支持：${originalType || "空"}`);
+            }
+            return originalType;
+        }
+
+        function processData(data) {
+            allQuestions = [];
+            chapters = {};
+            importWarnings = [];
+            data.forEach((row, index) => {
+                const rawText = getCell(row, FIELD_ALIASES.text);
+                if (!rawText) return;
+                const answer = getCell(row, FIELD_ALIASES.answer);
+                const type = normalizeQuestionType(getCell(row, FIELD_ALIASES.type), index + 2);
+                const chapter = getCell(row, FIELD_ALIASES.chapter) || "未分类";
+                const inline = extractInlineOptions(rawText);
+                const explicitOptions = readExplicitOptions(row);
+                const options = buildOptions(row, type, answer, inline.options);
+                const extractedText = !hasOptionValues(explicitOptions) && hasOptionValues(inline.options)
+                    ? (inline.stem || rawText)
+                    : rawText;
+                const text = normalizeQuestionText(extractedText);
+                const q = {
+                    id: getCell(row, FIELD_ALIASES.id) || String(index + 1),
+                    chapter,
+                    type,
+                    text,
+                    options,
+                    correctAnswer: answer,
+                    explanation: buildExplanation(row),
+                    userAnswer: null,
+                    isCorrect: null,
+                    favorite: false,
+                    index,
+                    key: makeQuestionKey(row, index)
+                };
+                allQuestions.push(q);
+                if (!chapters[q.chapter]) chapters[q.chapter] = [];
+                chapters[q.chapter].push(q);
+            });
+        }
+
+        function makeQuestionKey(row, index) {
+            return [
+                getCell(row, FIELD_ALIASES.id) || index,
+                getCell(row, FIELD_ALIASES.chapter),
+                getCell(row, FIELD_ALIASES.text)
+            ].join("|");
+        }
+
+        function hashText(text) {
+            let hash = 2166136261;
+            for (let i = 0; i < text.length; i++) {
+                hash ^= text.charCodeAt(i);
+                hash = Math.imul(hash, 16777619);
+            }
+            return (hash >>> 0).toString(16);
+        }
+
+        function readProgress() {
+            if (!currentBankKey) return { answers: {} };
+            try {
+                return JSON.parse(localStorage.getItem(currentBankKey) || '{"answers":{}}');
+            } catch {
+                return { answers: {} };
+            }
+        }
+
+        function saveProgress() {
+            if (!currentBankKey) return;
+            const answers = {};
+            allQuestions.forEach(q => {
+                if (q.userAnswer !== null || q.favorite) {
+                    answers[q.key] = {
+                        userAnswer: q.userAnswer,
+                        isCorrect: q.isCorrect,
+                        favorite: q.favorite === true
+                    };
+                }
+            });
+            try {
+                localStorage.setItem(currentBankKey, JSON.stringify({
+                    fileName: currentFileName,
+                    savedAt: new Date().toISOString(),
+                    lastChapter: currentChapter,
+                    lastIndex: currentIndex,
+                    answers
+                }));
+            } catch {
+                updateStorageStatus("浏览器阻止了本地保存；当前页面关闭后记录可能丢失。");
+            }
+        }
+
+        function restoreProgress() {
+            const saved = readProgress();
+            allQuestions.forEach(q => {
+                const state = saved.answers && saved.answers[q.key];
+                if (state) {
+                    if (state.userAnswer !== null && state.userAnswer !== undefined) {
+                        recordAnswer(q, state.userAnswer);
+                    }
+                    q.favorite = state.favorite === true;
+                }
+            });
+        }
+
+        function makeProgressExportPayload(source) {
+            const answered = allQuestions.filter(q => q.userAnswer !== null).length;
+            const mistakes = getMistakes().length;
+            return {
+                format: "quiz-progress-export",
+                source: source || "tikutong-preview",
+                exportedAt: new Date().toISOString(),
+                fileName: currentFileName,
+                lastChapter: currentChapter,
+                lastIndex: currentIndex,
+                total: allQuestions.length,
+                answered,
+                mistakes,
+                questions: allQuestions.map(q => ({
+                    id: q.id,
+                    chapter: q.chapter,
+                    type: q.type,
+                    text: q.text,
+                    correctAnswer: q.correctAnswer,
+                    explanation: q.explanation,
+                    userAnswer: q.userAnswer,
+                    isCorrect: q.isCorrect,
+                    favorite: q.favorite === true,
+                    key: q.key
+                }))
+            };
+        }
+
+        function exportFullProgress() {
+            if (allQuestions.length === 0) return;
+            downloadJSON("tikutong-preview-progress.json", makeProgressExportPayload("tikutong-preview"));
+        }
+
+        function downloadJSON(fileName, data) {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function importLegacyProgress(payload) {
+            if (!currentBankKey || allQuestions.length === 0) {
+                throw new Error("请先选择对应的本地 CSV 题库。");
+            }
+            if (!payload || !Array.isArray(payload.questions)) {
+                throw new Error("JSON 格式不对，没有 questions 数组。");
+            }
+
+            const byKey = new Map();
+            const byText = new Map();
+            payload.questions.forEach(item => {
+                const key = item.key || [item.id || "", item.chapter || "", item.text || ""].join("|");
+                byKey.set(key, item);
+                if (item.text) byText.set(String(item.text), item);
+            });
+
+            let imported = 0;
+            let importedFavorites = 0;
+            allQuestions.forEach(q => {
+                const state = byKey.get(q.key) || byText.get(q.text);
+                if (!state) return;
+                if (state.favorite === true) {
+                    q.favorite = true;
+                    importedFavorites++;
+                }
+                if (state.userAnswer !== null && state.userAnswer !== undefined) {
+                    recordAnswer(q, state.userAnswer);
+                    imported++;
+                }
+            });
+
+            if (imported === 0 && importedFavorites === 0) {
+                throw new Error("没有匹配到已答题目或收藏，请确认导出的 JSON 对应当前 CSV。");
+            }
+
+            renderSidebar();
+            const targetChapter = payload.lastChapter && (
+                chapters[payload.lastChapter]
+                || payload.lastChapter === "MISTAKE_BOOK"
+                || payload.lastChapter === "FAVORITE_BOOK"
+            )
+                ? payload.lastChapter
+                : currentChapter || Object.keys(chapters)[0];
+            selectChapter(targetChapter, Number(payload.lastIndex) || 0);
+            saveProgress();
+            updateMistakeCount();
+            updateFavoriteCount();
+            updateStorageStatus(`已导入进度：${imported} 道已答题，收藏 ${importedFavorites} 道，错题 ${getMistakes().length} 道。`);
+        }
+
+        function renderSidebar() {
+            chapterListEl.innerHTML = "";
+            Object.keys(chapters).forEach(chap => {
+                const li = document.createElement("li");
+                li.className = "chapter-item";
+                li.innerText = `${chap} (${chapters[chap].length}题)`;
+                li.onclick = () => selectChapter(chap, 0);
+                li.dataset.chap = chap;
+                chapterListEl.appendChild(li);
+            });
+            const favoriteLi = document.createElement("li");
+            favoriteLi.className = "chapter-item favorite-book";
+            favoriteLi.id = "favoriteBookBtn";
+            favoriteLi.onclick = () => selectChapter("FAVORITE_BOOK", 0);
+            chapterListEl.appendChild(favoriteLi);
+            const mistakeLi = document.createElement("li");
+            mistakeLi.className = "chapter-item mistake-book";
+            mistakeLi.id = "mistakeBookBtn";
+            mistakeLi.onclick = () => selectChapter("MISTAKE_BOOK", 0);
+            chapterListEl.appendChild(mistakeLi);
+            updateMistakeCount();
+            updateFavoriteCount();
+        }
+
+        function getMistakes() {
+            return allQuestions.filter(q => q.isCorrect === false);
+        }
+
+        function getFavorites() {
+            return allQuestions.filter(q => q.favorite === true);
+        }
+
+        function updateMistakeCount() {
+            const count = getMistakes().length;
+            const btn = document.getElementById("mistakeBookBtn");
+            if (btn) btn.innerText = `错题本 (${count}题)`;
+            exportMistakesBtn.disabled = count === 0;
+            prevWrongBtn.disabled = count === 0;
+            nextWrongBtn.disabled = count === 0;
+        }
+
+        function updateFavoriteCount() {
+            const count = getFavorites().length;
+            const btn = document.getElementById("favoriteBookBtn");
+            if (btn) btn.innerText = `收藏题库 (${count}题)`;
+            prevFavoriteBtn.disabled = count === 0;
+            nextFavoriteBtn.disabled = count === 0;
+        }
+
+        function selectChapter(chap, preferredIndex) {
+            currentChapter = chap;
+            currentIndex = Math.max(0, preferredIndex || 0);
+            document.querySelectorAll(".chapter-item").forEach(el => el.classList.remove("active"));
+            if (chap === "FAVORITE_BOOK") {
+                const favoriteBookBtn = document.getElementById("favoriteBookBtn");
+                if (favoriteBookBtn) favoriteBookBtn.classList.add("active");
+                currentQuestions = getFavorites();
+                displayChapterTitle.innerText = "收藏题库";
+            } else if (chap === "MISTAKE_BOOK") {
+                const mistakeBtn = document.getElementById("mistakeBookBtn");
+                if (mistakeBtn) mistakeBtn.classList.add("active");
+                currentQuestions = getMistakes();
+                displayChapterTitle.innerText = "错题本";
+            } else {
+                const activeLi = Array.from(document.querySelectorAll(".chapter-item")).find(el => el.dataset.chap === chap);
+                if (activeLi) activeLi.classList.add("active");
+                currentQuestions = chapters[chap] || [];
+                displayChapterTitle.innerText = chap;
+            }
+            if (currentIndex >= currentQuestions.length) currentIndex = Math.max(0, currentQuestions.length - 1);
+            renderQuestion();
+            saveProgress();
+        }
+
+        function toggleFavorite() {
+            const q = currentQuestions[currentIndex];
+            if (!q) return;
+            q.favorite = !q.favorite;
+            saveProgress();
+            updateFavoriteCount();
+            if (currentChapter === "FAVORITE_BOOK") {
+                currentQuestions = getFavorites();
+                if (currentIndex >= currentQuestions.length) {
+                    currentIndex = Math.max(0, currentQuestions.length - 1);
+                }
+            }
+            renderQuestion();
+        }
+
+        function checkAnswer() {
+            if (memorizeMode) return;
+            const q = currentQuestions[currentIndex];
+            if (!q) return;
+            const inputs = document.querySelectorAll('input[name="qOption"]:checked');
+            if (inputs.length === 0) {
+                if (!hasOptionValues(q.options)) {
+                    q.userAnswer = "已查看";
+                    q.isCorrect = null;
+                    saveProgress();
+                    updateMistakeCount();
+                    renderQuestion();
+                }
+                return;
+            }
+            const ansArr = Array.from(inputs).map(input => input.value).sort();
+            recordAnswer(q, ansArr.join(""));
+            saveProgress();
+            updateMistakeCount();
+            renderQuestion();
+        }
+
+        function normalizeAnswer(answer) {
+            const text = String(answer || "").trim().toUpperCase();
+            const leading = text.match(/^\s*([A-E](?:\s*[,，、;；|/ ]?\s*[A-E])*)/);
+            const candidate = leading ? leading[1] : text;
+            if (!/^[A-E\s,，、;；|/]+$/.test(candidate)) return "";
+            return candidate.replace(/[^A-E]/g, "").split("").sort().join("");
+        }
+
+        function getAnswerMeaning(text) {
+            const normalized = String(text || "")
+                .trim()
+                .replace(/(?:解析|说明|explanation)\s*[:：][\s\S]*$/i, "")
+                .replace(/^(?:正确答案|答案|answer|key)\s*[:：]\s*/i, "")
+                .replace(/[（(][\s\S]*?[）)]/g, "")
+                .toUpperCase()
+                .replace(/\s+/g, "")
+                .replace(/[。．.：:]/g, "");
+            const trueValues = ["正确", "对", "是", "TRUE", "T", "YES", "Y", "√", "✓", "1"];
+            const falseValues = ["错误", "错", "否", "FALSE", "F", "NO", "N", "×", "✕", "X", "0"];
+            if (trueValues.includes(normalized)) return "true";
+            if (falseValues.includes(normalized)) return "false";
+            return "";
+        }
+
+        function getStandardAnswerKeys(q) {
+            const directKeys = normalizeAnswer(q.correctAnswer);
+            if (directKeys) return directKeys;
+
+            const expectedMeaning = getAnswerMeaning(q.correctAnswer);
+            if (!expectedMeaning) return "";
+
+            const matchedKeys = [];
+            Object.keys(q.options || {}).forEach(key => {
+                if (getAnswerMeaning(q.options[key]) === expectedMeaning) {
+                    matchedKeys.push(key);
+                }
+            });
+            return matchedKeys.sort().join("");
+        }
+
+        function hasReferenceAnswer(q) {
+            return getStandardAnswerKeys(q) !== "";
+        }
+
+        function evaluateAnswer(q, userAnswer) {
+            const standardAnswer = getStandardAnswerKeys(q);
+            if (!standardAnswer) return null;
+            return normalizeAnswer(userAnswer) === standardAnswer;
+        }
+
+        function recordAnswer(q, userAnswer) {
+            q.userAnswer = normalizeAnswer(userAnswer);
+            q.isCorrect = evaluateAnswer(q, q.userAnswer);
+            return q.isCorrect;
+        }
+
+        function getScoreStats(questions) {
+            const gradedQuestions = (questions || []).filter(q => q.isCorrect === true || q.isCorrect === false);
+            const correct = gradedQuestions.filter(q => q.isCorrect === true).length;
+            const wrong = gradedQuestions.length - correct;
+            return {
+                graded: gradedQuestions.length,
+                correct,
+                wrong,
+                accuracy: gradedQuestions.length ? Math.round((correct / gradedQuestions.length) * 100) : null
+            };
+        }
+
+        function formatExplanation(explanation) {
+            return String(explanation || "").trim() || "原题未提供解析。";
+        }
+
+        function renderQuestion() {
+            const hasQuestions = currentQuestions.length > 0;
+            emptyState.style.display = allQuestions.length === 0 || !hasQuestions ? "block" : "none";
+            questionCard.style.display = hasQuestions ? "block" : "none";
+            jumpBtn.disabled = !hasQuestions;
+            prevBtn.disabled = !hasQuestions || currentIndex === 0;
+            nextBtn.disabled = !hasQuestions || currentIndex === currentQuestions.length - 1;
+            nextUnansweredBtn.disabled = allQuestions.length === 0;
+            clearProgressBtn.disabled = allQuestions.length === 0;
+            importProgressBtn.disabled = allQuestions.length === 0;
+            exportFullProgressBtn.disabled = allQuestions.length === 0;
+            favoriteBtn.disabled = !hasQuestions;
+            if (!hasQuestions) {
+                if (allQuestions.length > 0) emptyState.innerText = "当前列表暂无题目。";
+                updateProgress();
+                renderQuestionGrid();
+                return;
+            }
+
+            const q = currentQuestions[currentIndex];
+            qTypeEl.innerText = q.type;
+            qTextEl.innerText = `${currentIndex + 1}. ${q.text}`;
+            favoriteBtn.innerText = q.favorite ? "★" : "☆";
+            favoriteBtn.classList.toggle("active", q.favorite);
+            favoriteBtn.setAttribute("aria-pressed", q.favorite ? "true" : "false");
+            favoriteBtn.title = q.favorite ? "取消收藏" : "收藏本题";
+            optionsListEl.innerHTML = "";
+            feedbackBox.className = "feedback-box";
+            const isMulti = q.type.includes("多选");
+            const inputType = isMulti ? "checkbox" : "radio";
+            let optionCount = 0;
+
+            Object.keys(q.options).forEach(key => {
+                const value = q.options[key];
+                if (!value || !String(value).trim()) return;
+                optionCount++;
+                const label = document.createElement("label");
+                label.className = "option-label";
+                label.id = `label-${key}`;
+                const input = document.createElement("input");
+                input.type = inputType;
+                input.name = "qOption";
+                input.value = key;
+                if (q.userAnswer !== null || memorizeMode) {
+                    input.disabled = true;
+                    input.checked = !!(q.userAnswer && q.userAnswer.includes(key));
+                } else if (!isMulti) {
+                    input.addEventListener("change", checkAnswer);
+                }
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(`${key}. ${value}`));
+                optionsListEl.appendChild(label);
+            });
+
+            if (optionCount === 0) {
+                const note = document.createElement("div");
+                note.className = "no-options-note";
+                note.innerText = "本题没有 A-E 选项，按记忆/简答题处理。点击“显示答案/记为已看”后会展示参考答案并计入进度。";
+                optionsListEl.appendChild(note);
+            }
+
+            submitBtn.innerText = optionCount === 0 ? "显示答案/记为已看" : "确认多选答案";
+            submitBtn.style.display = q.userAnswer === null && !memorizeMode && (isMulti || optionCount === 0) ? "inline-block" : "none";
+            if (q.userAnswer !== null) {
+                showFeedback(q);
+            } else if (memorizeMode) {
+                showFeedback(q, true);
+            }
+            updateProgress();
+            renderQuestionGrid();
+        }
+
+        function showFeedback(q, revealOnly = false) {
+            feedbackBox.classList.add("show");
+            const hasAnswer = hasReferenceAnswer(q);
+            correctAnswerText.innerText = hasAnswer ? q.correctAnswer : "原题未提供参考答案";
+            userAnswerText.innerText = revealOnly ? "背题模式未作答" : (q.userAnswer || "未作答");
+            explanationText.innerText = formatExplanation(q.explanation);
+            const standardAnsArr = getStandardAnswerKeys(q).split("");
+            document.querySelectorAll(".option-label").forEach(label => {
+                const val = label.id.split("-")[1];
+                if (standardAnsArr.includes(val)) {
+                    label.classList.add("option-correct");
+                } else if (!revealOnly && q.userAnswer && q.userAnswer.includes(val)) {
+                    label.classList.add("option-wrong");
+                }
+            });
+            if (!hasAnswer) {
+                feedbackBox.classList.remove("feedback-correct");
+                feedbackBox.classList.remove("feedback-wrong");
+                resultTitle.innerText = "原题未提供参考答案，本题不参与对错统计。";
+                resultTitle.style.color = "var(--warning)";
+            } else if (revealOnly) {
+                feedbackBox.classList.add("feedback-correct");
+                feedbackBox.classList.remove("feedback-wrong");
+                resultTitle.innerText = "背题模式：直接显示答案";
+                resultTitle.style.color = "var(--warning)";
+            } else if (q.isCorrect) {
+                feedbackBox.classList.add("feedback-correct");
+                resultTitle.innerText = "回答正确";
+                resultTitle.style.color = "var(--success)";
+            } else {
+                feedbackBox.classList.add("feedback-wrong");
+                resultTitle.innerText = `回答错误（你选了：${q.userAnswer || "未作答"}）`;
+                resultTitle.style.color = "var(--danger)";
+            }
+        }
+
+        function toggleMemorizeMode() {
+            memorizeMode = !memorizeMode;
+            memorizeModeBtn.innerText = memorizeMode ? "背题模式：开" : "背题模式：关";
+            memorizeModeBtn.classList.toggle("success", memorizeMode);
+            memorizeModeBtn.classList.toggle("warning", !memorizeMode);
+            renderQuestion();
+        }
+
+        function renderQuestionGrid() {
+            questionGrid.innerHTML = "";
+            currentQuestions.forEach((q, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "q-jump";
+                if (q.userAnswer !== null) btn.classList.add("answered");
+                if (q.isCorrect === false) btn.classList.add("wrong");
+                if (q.favorite) btn.classList.add("favorite");
+                if (idx === currentIndex) btn.classList.add("current");
+                btn.type = "button";
+                btn.innerText = String(idx + 1);
+                btn.title = q.text;
+                btn.onclick = () => jumpToIndex(idx);
+                questionGrid.appendChild(btn);
+            });
+        }
+
+        function updateProgress() {
+            if (currentQuestions.length === 0) {
+                progressBar.style.width = "0%";
+                progressText.innerText = "0 / 0";
+                return;
+            }
+            const answered = currentQuestions.filter(q => q.userAnswer !== null).length;
+            const total = currentQuestions.length;
+            const score = getScoreStats(currentQuestions);
+            const scoreText = score.graded
+                ? `；计分：${score.correct} / ${score.graded}（${score.accuracy}%）`
+                : "；计分：暂无有参考答案的已答题";
+            progressBar.style.width = ((answered / total) * 100) + "%";
+            progressText.innerText = `已练习：${answered} / 总计：${total} 题${scoreText}`;
+        }
+
+        function jumpToIndex(index) {
+            if (index < 0 || index >= currentQuestions.length) return;
+            currentIndex = index;
+            renderQuestion();
+            saveProgress();
+        }
+
+        function jumpByPredicate(predicate, direction) {
+            if (!currentQuestions.length) return;
+            for (let step = 1; step <= currentQuestions.length; step++) {
+                const idx = (currentIndex + direction * step + currentQuestions.length) % currentQuestions.length;
+                if (predicate(currentQuestions[idx])) {
+                    jumpToIndex(idx);
+                    return;
+                }
+            }
+        }
+
+        function jumpToAdjacentFavorite(direction) {
+            const favorites = getFavorites();
+            if (favorites.length === 0) return;
+            const current = currentQuestions[currentIndex];
+            let favoriteIndex = current ? favorites.findIndex(q => q.key === current.key) : -1;
+            if (favoriteIndex < 0) favoriteIndex = direction > 0 ? -1 : 0;
+            const targetIndex = (favoriteIndex + direction + favorites.length) % favorites.length;
+            selectChapter("FAVORITE_BOOK", targetIndex);
+        }
+
+        function exportMistakes() {
+            const mistakes = getMistakes();
+            if (mistakes.length === 0) return;
+            const headers = ["全局序号","试卷/章节","题型","题干","A","B","C","D","E","正确答案","解析","你的答案"];
+            const rows = mistakes.map(q => [
+                q.id, q.chapter, q.type, q.text,
+                q.options.A, q.options.B, q.options.C, q.options.D, q.options.E,
+                q.correctAnswer, q.explanation, q.userAnswer || ""
+            ]);
+            downloadCSV("tikutong-preview-wrong-questions.csv", [headers, ...rows]);
+        }
+
+        function downloadCSV(fileName, rows) {
+            const csv = rows.map(row => row.map(csvEscape).join(",")).join("\n");
+            const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function csvEscape(value) {
+            return '"' + String(value ?? "").replace(/"/g, '""') + '"';
+        }
+
+        function clearProgress() {
+            if (!currentBankKey) return;
+            if (!confirm("清空当前题库在本机保存的答题记录？收藏会保留，原 CSV 文件不会受影响。")) return;
+            try {
+                localStorage.removeItem(currentBankKey);
+            } catch {}
+            allQuestions.forEach(q => {
+                q.userAnswer = null;
+                q.isCorrect = null;
+            });
+            updateMistakeCount();
+            updateFavoriteCount();
+            selectChapter(Object.keys(chapters)[0] || "", 0);
+            updateStorageStatus("已清空本题库答题记录，收藏已保留。");
+        }
+
+        function updateStorageStatus(message) {
+            storageStatus.innerText = message;
+        }
+
+        submitBtn.onclick = checkAnswer;
+        prevBtn.onclick = () => jumpToIndex(currentIndex - 1);
+        nextBtn.onclick = () => jumpToIndex(currentIndex + 1);
+        jumpBtn.onclick = () => jumpToIndex(Number(jumpInput.value) - 1);
+        jumpInput.addEventListener("keydown", e => {
+            if (e.key === "Enter") jumpBtn.click();
+        });
+        prevWrongBtn.onclick = () => jumpByPredicate(q => q.isCorrect === false, -1);
+        nextWrongBtn.onclick = () => jumpByPredicate(q => q.isCorrect === false, 1);
+        prevFavoriteBtn.onclick = () => jumpToAdjacentFavorite(-1);
+        nextFavoriteBtn.onclick = () => jumpToAdjacentFavorite(1);
+        nextUnansweredBtn.onclick = () => jumpByPredicate(q => q.userAnswer === null, 1);
+        memorizeModeBtn.onclick = toggleMemorizeMode;
+        favoriteBtn.onclick = toggleFavorite;
+        exportMistakesBtn.onclick = exportMistakes;
+        exportFullProgressBtn.onclick = exportFullProgress;
+        clearProgressBtn.onclick = clearProgress;
+    </script>
+</body>
+</html>
