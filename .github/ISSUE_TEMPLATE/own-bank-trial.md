@@ -39,6 +39,20 @@ Canonical JSON created: Yes / No
 
 CSV created: Yes / No
 
+## Preview
+
+Preview opened successfully: Yes / No
+
+CSV loaded without manual editing: Yes / No
+
+Single-choice practice: Pass / Fail
+
+Multiple-choice practice: Pass / Fail
+
+True/false practice: Pass / Fail
+
+Blank-answer question was not graded: Yes / No
+
 ## Spot check
 
 Obvious missing questions:

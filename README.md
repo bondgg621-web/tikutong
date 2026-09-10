@@ -71,6 +71,12 @@ The best way to test TikuTong is with a question bank you already use.
 
 题库通的目标不是重新生成题目，而是尽可能忠实地整理你已有的题目。原题没有答案时，应保持为空，不要让 Agent 根据知识或常识自行补答案。请检查是否漏题、改题或错误识别题型；反馈时不需要上传私人题库。
 
+### Preview and practice your output
+
+TikuTong includes an optional local preview tool: [`tools/preview/index.html`](tools/preview/index.html).
+
+Generate a Standard CSV with TikuTong, open the preview tool locally, and load the CSV to inspect or practice your questions. The Preview is a consumer of TikuTong output, not part of the canonical compiler core.
+
 ## Supported inputs
 
 The deterministic route reads one regular UTF-8 or UTF-8 BOM `.txt`, `.md`, or `.markdown` file that follows the strict `[single_choice]` grammar.

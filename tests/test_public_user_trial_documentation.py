@@ -12,6 +12,9 @@ EXPECTED_PATH = ROOT / "examples" / "user-trial" / "EXPECTED_RESULTS.md"
 ISSUE_TEMPLATE_PATH = (
     ROOT / ".github" / "ISSUE_TEMPLATE" / "own-bank-trial.md"
 )
+PREVIEW_PATH = ROOT / "tools" / "preview" / "index.html"
+PREVIEW_README_PATH = ROOT / "tools" / "preview" / "README.md"
+TRIAL_CSV_PATH = ROOT / "examples" / "user-trial" / "expected-standard-question-bank.csv"
 
 
 def test_public_trial_entry_and_files_exist() -> None:
@@ -19,7 +22,16 @@ def test_public_trial_entry_and_files_exist() -> None:
 
     assert "## 🧪 Try TikuTong with your own question bank" in readme
     assert "[User Trial Guide](docs/USER_TRIAL.md)" in readme
-    for path in (GUIDE_PATH, TRIAL_PATH, EXPECTED_PATH, ISSUE_TEMPLATE_PATH):
+    assert "(tools/preview/index.html)" in readme
+    for path in (
+        GUIDE_PATH,
+        TRIAL_PATH,
+        EXPECTED_PATH,
+        ISSUE_TEMPLATE_PATH,
+        PREVIEW_PATH,
+        PREVIEW_README_PATH,
+        TRIAL_CSV_PATH,
+    ):
         assert path.is_file()
 
 
@@ -62,7 +74,7 @@ def test_expected_results_lock_counts_answers_and_null_gates() -> None:
 def test_trial_docs_preserve_the_reader_and_missing_answer_boundaries() -> None:
     combined = "\n".join(
         path.read_text(encoding="utf-8")
-        for path in (README_PATH, GUIDE_PATH, EXPECTED_PATH)
+        for path in (README_PATH, GUIDE_PATH, EXPECTED_PATH, PREVIEW_README_PATH)
     )
 
     for forbidden in (
@@ -79,6 +91,8 @@ def test_trial_docs_preserve_the_reader_and_missing_answer_boundaries() -> None:
     assert "Agent environment" in combined
     assert "没有答案就保持为空" in combined
     assert "不要根据知识或常识自行补答案" in combined
+    assert "Round D｜Preview & Practice" in combined
+    assert "BLANK_ANSWER_NOT_GRADED" in combined
 
 
 def test_own_bank_issue_template_has_required_frontmatter_and_sections() -> None:
@@ -96,10 +110,13 @@ def test_own_bank_issue_template_has_required_frontmatter_and_sections() -> None
         "## Environment",
         "## Standard trial",
         "## My own question bank",
+        "## Preview",
         "## Spot check",
         "## User experience",
         "## Privacy",
     ):
         assert heading in text
     assert "First point where you got stuck:" in text
+    assert "CSV loaded without manual editing: Yes / No" in text
+    assert "Blank-answer question was not graded: Yes / No" in text
     assert "Please do not upload private, copyrighted, or internal question-bank material." in text

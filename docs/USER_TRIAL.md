@@ -53,6 +53,31 @@ PDF、DOCX 和图片由你自己的 Agent 环境读取；TikuTong 核心不内�
 
 如果原始资料中的某题没有答案，输出也应保持为空。不要把 Agent 猜出的答案当作整理结果。
 
+## Round D｜Preview & Practice
+
+使用你刚生成的 Standard CSV，在本地浏览器打开 [`tools/preview/index.html`](../tools/preview/index.html)，然后选择该 CSV。第一次也可以使用项目提供的 [`expected-standard-question-bank.csv`](../examples/user-trial/expected-standard-question-bank.csv) 熟悉界面。
+
+至少实际检查：
+
+1. 一道有答案的单选题
+2. 一道有答案的多选题
+3. 一道有答案的判断题
+4. 一道没有参考答案的题
+
+记录以下结果：
+
+```text
+QUESTION_DISPLAY_CORRECT=
+OPTION_ORDER_CORRECT=
+QUESTION_TYPE_CORRECT=
+ANSWER_DISPLAY_CORRECT=
+EXPLANATION_DISPLAY_CORRECT=
+BLANK_ANSWER_NOT_GRADED=
+CSV_LOADED_WITHOUT_MANUAL_EDITING=
+```
+
+没有参考答案的题仍然可以选择，但 Preview 不应判对或判错，不应加入错题，也不应降低正确率。确认 TikuTong 生成的 CSV 无需手工修改即可导入。
+
 ## User experience｜使用体验
 
 完成后，请记录：
