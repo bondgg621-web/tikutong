@@ -53,6 +53,24 @@ Use TikuTong to read D:\资料\神经病学题库.pdf, extract the existing ques
 
 The Agent should read [`skills/curate-question-bank/SKILL.md`](skills/curate-question-bank/SKILL.md), choose the assisted route, and use the maintained API recipe in [`assisted-intake-v1.md`](skills/curate-question-bank/references/assisted-intake-v1.md). The user does not need to manually construct QBC's internal objects.
 
+## 🧪 Try TikuTong with your own question bank
+
+The best way to test TikuTong is with a question bank you already use.
+
+1. Start with the included standard trial: [`examples/user-trial/tikutong-standard-trial.md`](examples/user-trial/tikutong-standard-trial.md).
+2. Then try one of your own PDF, DOCX, image, Markdown, or text question banks that your Agent environment can read.
+3. Keep missing answers empty—do not let the Agent guess them.
+4. Check whether questions were lost, rewritten, or misclassified.
+5. Share your result without uploading private question-bank content.
+
+→ See [User Trial Guide](docs/USER_TRIAL.md)
+
+### 用你自己的题库试试
+
+建议先运行项目提供的标准测试题库，然后再选择一份你自己正在使用的 PDF、Word、截图或文本题库。
+
+题库通的目标不是重新生成题目，而是尽可能忠实地整理你已有的题目。原题没有答案时，应保持为空，不要让 Agent 根据知识或常识自行补答案。请检查是否漏题、改题或错误识别题型；反馈时不需要上传私人题库。
+
 ## Supported inputs
 
 The deterministic route reads one regular UTF-8 or UTF-8 BOM `.txt`, `.md`, or `.markdown` file that follows the strict `[single_choice]` grammar.
