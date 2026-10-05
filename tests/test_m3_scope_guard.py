@@ -8,6 +8,20 @@ from m3_helpers import (
 
 ROOT=Path(__file__).resolve().parents[1]
 
+# IP-03 added runtime-only document normalization while retaining the frozen
+# M2 parser contract.  IP-05B adds a test-only M3 rich-evidence baseline.
+# Keep the M3 guard's approved set explicit without expanding its authority
+# count or its runtime/schema scope.
+AUTHORITY_SHA256={
+    **AUTHORITY_SHA256,
+    'skills/curate-question-bank/scripts/qbcore/text_normalization.py':'bb1822a4a46028c2c747344ac002ec33bdbe60233ef2640e439f7447ec080152',
+    'tests/test_m2_scope_guard.py':'92ab658bfe2ed57f94143574919b26b8e2916b631fb7f5a0415865651ff03d72',
+}
+M3_TEST_WHITELIST=[
+    *M3_TEST_WHITELIST,
+    'tests/test_m3_rich_answer_evidence.py',
+]
+
 def _hash(path:Path)->str:return sha256(path.read_bytes()).hexdigest()
 
 def _repo_files():

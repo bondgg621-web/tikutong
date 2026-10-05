@@ -102,7 +102,9 @@ PRE_M2_QBCORE_SHA256 = {
     "workspace_contracts.py": "29b535190d280776438b9735a150f9312073ead5fe9abd1bae19507b50d562fe",
 }
 PLANNED_M2_MODULE_NAMES = {
+    "boundary_detector.py",
     "candidate_materializer.py",
+    "option_structure_parser.py",
     "parse_contracts.py",
     "parse_service.py",
     "single_choice_parser.py",
@@ -111,7 +113,9 @@ PLANNED_M2_MODULE_NAMES = {
 # Task 8 adds the read-only source-resolution and decoding boundary.
 REQUIRED_PLANNED_M2_MODULES: frozenset[str] = frozenset(
     {
+        "boundary_detector.py",
         "candidate_materializer.py",
+        "option_structure_parser.py",
         "parse_contracts.py",
         "parse_service.py",
         "single_choice_parser.py",

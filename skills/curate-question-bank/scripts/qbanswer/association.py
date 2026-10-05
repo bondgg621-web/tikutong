@@ -1,6 +1,64 @@
 """Pure deterministic answer association and historical-adjudication logic."""
 from __future__ import annotations
 from collections import defaultdict
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class AssociationDecision:
+    """Runtime-only attachment assessment; it cannot mutate M3 state."""
+    question_number: int | None
+    candidate_id: str | None
+    option_ids: tuple[str, ...]
+    decision: str
+    confidence: str
+    warnings: tuple[str, ...]
+    evidence_ref: str
+
+
+def associate_answer_evidence(candidates: list[dict], evidences) -> tuple[AssociationDecision, ...]:
+    """Safely assess rich evidence without creating a Decision or validation state."""
+    by_number=defaultdict(list)
+    for candidate in candidates:
+        number=candidate.get('_question_number')
+        if type(number) is int and number > 0:
+            by_number[number].append(candidate)
+    label_sets=defaultdict(set)
+    for evidence in evidences:
+        if evidence.question_number is not None:
+            label_sets[evidence.question_number].add(evidence.normalized_labels)
+    output=[]
+    for evidence in evidences:
+        warning=list(evidence.warnings)
+        reference=f"{evidence.source_id}:{evidence.locator}"
+        if evidence.question_number is None:
+            if 'ANSWER_ATTACHMENT_UNCERTAIN' not in warning:
+                warning.append('ANSWER_ATTACHMENT_UNCERTAIN')
+            output.append(AssociationDecision(None,None,(),"UNRESOLVED","low",tuple(warning),reference));continue
+        matches=by_number.get(evidence.question_number,[])
+        if not matches:
+            warning.append('QUESTION_NUMBER_UNRESOLVED')
+            output.append(AssociationDecision(evidence.question_number,None,(),"UNRESOLVED","low",tuple(warning),reference));continue
+        if len(matches)!=1:
+            warning.append('DUPLICATE_QUESTION_NUMBER')
+            output.append(AssociationDecision(evidence.question_number,None,(),"UNRESOLVED","low",tuple(warning),reference));continue
+        candidate=matches[0]
+        if len(label_sets[evidence.question_number])>1:
+            warning.append('ANSWER_CONFLICT')
+            output.append(AssociationDecision(evidence.question_number,candidate['candidate_id'],(),"CONFLICT","low",tuple(warning),reference));continue
+        if not evidence.normalized_labels:
+            warning.append('RUNTIME_ONLY_ANSWER_KIND')
+            output.append(AssociationDecision(evidence.question_number,candidate['candidate_id'],(),"UNRESOLVED","runtime_only",tuple(warning),reference));continue
+        labels={option['source_label']:option['option_id'] for option in candidate['options']}
+        missing=[label for label in evidence.normalized_labels if label not in labels]
+        if missing:
+            warning.append('OPTION_LABEL_UNRESOLVED')
+            output.append(AssociationDecision(evidence.question_number,candidate['candidate_id'],(),"UNRESOLVED","low",tuple(warning),reference));continue
+        if len(evidence.normalized_labels)!=1:
+            warning.append('MULTISELECT_NOT_ATTACHABLE')
+            output.append(AssociationDecision(evidence.question_number,candidate['candidate_id'],(),"UNRESOLVED","low",tuple(warning),reference));continue
+        output.append(AssociationDecision(evidence.question_number,candidate['candidate_id'],(labels[evidence.normalized_labels[0]],),"ATTACHABLE","medium",tuple(warning),reference))
+    return tuple(output)
 
 
 def _nullable_option_key(v): return (0,"") if v is None else (1,v)

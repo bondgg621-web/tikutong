@@ -3,12 +3,132 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from dataclasses import dataclass
 from hashlib import sha256
 import json
 import unicodedata
 
 
 MAX_CANONICAL_JSON_DEPTH = 64
+_ZERO_WIDTH_CHARACTERS = frozenset({"\u200b", "\u200c", "\u200d", "\u2060", "\ufeff"})
+
+
+@dataclass(frozen=True)
+class SourceSpan:
+    """Conservative line-level source location for runtime-only metadata.
+
+    Character offsets remain ``None`` because replacement/removal normalization
+    does not preserve a trustworthy one-to-one character mapping.
+    """
+
+    source_id: str
+    line_start: int
+    line_end: int
+    char_start: int | None = None
+    char_end: int | None = None
+
+
+@dataclass(frozen=True)
+class NormalizedLine:
+    """One normalized logical line with the original line retained verbatim."""
+
+    normalized_line_number: int
+    original_line_number: int
+    raw_text: str
+    normalized_text: str
+    original_span: SourceSpan
+    normalized_span: SourceSpan
+
+
+@dataclass(frozen=True)
+class NormalizationChange:
+    """A non-lossy audit entry for a character-level normalization event."""
+
+    kind: str
+    original_line_number: int
+    raw_text: str
+    normalized_text: str
+
+
+@dataclass(frozen=True)
+class NormalizedDocument:
+    """Runtime normalization view; it is not a Candidate persistence format."""
+
+    source_id: str
+    raw_text: str
+    normalized_text: str
+    lines: tuple[NormalizedLine, ...]
+    source_map: tuple[SourceSpan, ...]
+    changes: tuple[NormalizationChange, ...]
+
+
+def normalize_document(raw_text: str, *, source_id: str) -> NormalizedDocument:
+    """Build a reversible-at-document-level, line-mapped normalization view.
+
+    This deliberately preserves every logical line and the complete raw input.
+    It only normalizes line endings, removes a leading UTF-8 BOM and recognized
+    zero-width format characters, and replaces Unicode whitespace with ASCII
+    spaces. It neither guesses OCR characters nor changes parser behavior.
+    """
+
+    if type(raw_text) is not str:
+        raise TypeError("raw_text must be a string")
+    if type(source_id) is not str or not source_id:
+        raise ValueError("source_id must be a non-empty string")
+
+    logical_text = raw_text.replace("\r\n", "\n").replace("\r", "\n")
+    raw_lines = logical_text.split("\n")
+    normalized_lines: list[NormalizedLine] = []
+    source_map: list[SourceSpan] = []
+    changes: list[NormalizationChange] = []
+
+    for line_number, raw_line in enumerate(raw_lines, start=1):
+        output: list[str] = []
+        for character_index, character in enumerate(raw_line):
+            if line_number == 1 and character_index == 0 and character == "\ufeff":
+                changes.append(
+                    NormalizationChange(
+                        "leading_utf8_bom_removed", line_number, character, ""
+                    )
+                )
+                continue
+            if character in _ZERO_WIDTH_CHARACTERS:
+                changes.append(
+                    NormalizationChange(
+                        "zero_width_removed", line_number, character, ""
+                    )
+                )
+                continue
+            if character != " " and character.isspace():
+                changes.append(
+                    NormalizationChange(
+                        "unicode_whitespace_replaced", line_number, character, " "
+                    )
+                )
+                output.append(" ")
+                continue
+            output.append(character)
+
+        span = SourceSpan(source_id, line_number, line_number)
+        normalized_line = NormalizedLine(
+            normalized_line_number=line_number,
+            original_line_number=line_number,
+            raw_text=raw_line,
+            normalized_text="".join(output),
+            original_span=span,
+            normalized_span=span,
+        )
+        normalized_lines.append(normalized_line)
+        source_map.append(span)
+
+    return NormalizedDocument(
+        source_id=source_id,
+        raw_text=raw_text,
+        normalized_text="\n".join(line.normalized_text for line in normalized_lines),
+        lines=tuple(normalized_lines),
+        source_map=tuple(source_map),
+        changes=tuple(changes),
+    )
 
 
 def normalize_text(value: str) -> str:
